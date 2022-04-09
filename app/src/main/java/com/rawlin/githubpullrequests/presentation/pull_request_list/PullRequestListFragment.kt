@@ -66,9 +66,6 @@ class PullRequestListFragment : BindingFragment<FragmentPullRequestListBinding>(
                     toggleLoading(false)
                     prs.peekContent().data?.pullRequests?.let { adapter.submitList(it) }
                 }
-                null -> {
-                    //todo: something went wrong
-                }
             }
         }
     }
