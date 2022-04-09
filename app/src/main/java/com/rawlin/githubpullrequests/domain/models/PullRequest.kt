@@ -1,10 +1,12 @@
 package com.rawlin.githubpullrequests.domain.models
 
 
-import com.rawlin.githubpullrequests.domain.moshi_annotations.DateTime
+import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @JsonClass(generateAdapter = true)
 data class PullRequest(
     val body: String,
@@ -17,4 +19,4 @@ data class PullRequest(
     @Json(name = "updated_at")
     val updatedAt: String,
     val user: User
-)
+): Parcelable

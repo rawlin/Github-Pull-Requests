@@ -45,6 +45,10 @@ class PRsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(imageView)
 
+            binding.root.setOnClickListener {
+                onItemClickListener?.invoke(item)
+            }
+
         }
     }
 

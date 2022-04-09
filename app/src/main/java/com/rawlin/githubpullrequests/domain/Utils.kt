@@ -1,6 +1,8 @@
 package com.rawlin.githubpullrequests.domain
 
 import android.text.format.*
+import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,15 +26,21 @@ internal suspend fun <T : Any> makeSafeApiCall(apiCall: suspend () -> Response<T
     }
 }
 
-internal fun Long.toDateString(): String {
-    return DateFormat.format("dd/MM/yyyy hh:mm", this).toString()
+fun NavController.navigateSafely(directions: NavDirections) {
+    currentDestination?.getAction(directions.actionId)
+        ?.let { navigate(directions) }
 }
 
 internal fun String.toDateString(): String {
-    val format: java.text.DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH).also {
-        it.timeZone = TimeZone.getTimeZone("UTC")
+    return try {
+        val format: java.text.DateFormat =
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH).also {
+                it.timeZone = TimeZone.getTimeZone("UTC")
+            }
+        val date = format.parse(this)
+        DateFormat.format("d MMM yyyy", date).toString()
+    } catch (t: Throwable) {
+        ""
     }
-    val date = format.parse(this)
 
-    return DateFormat.format("dd/MM/yyyy hh:mm", date).toString()
 }

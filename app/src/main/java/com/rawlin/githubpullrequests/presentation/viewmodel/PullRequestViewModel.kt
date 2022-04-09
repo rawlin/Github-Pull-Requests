@@ -29,4 +29,8 @@ class PullRequestViewModel @Inject constructor(
         }
     }
 
+    fun forceRefresh() {
+        _allPullRequests.value = _allPullRequests.value
+    }
+
 }
