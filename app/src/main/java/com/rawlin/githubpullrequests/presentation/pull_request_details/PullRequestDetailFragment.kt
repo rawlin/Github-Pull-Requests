@@ -1,6 +1,7 @@
 package com.rawlin.githubpullrequests.presentation.pull_request_details
 
 import android.os.Bundle
+import android.transition.ChangeBounds
 import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -24,6 +25,12 @@ class PullRequestDetailFragment : BindingFragment<FragmentPullRequestDetailBindi
         super.onViewCreated(view, savedInstanceState)
 
         populateView()
+        sharedElementEnterTransition = ChangeBounds().apply {
+            duration = 750
+        }
+        sharedElementReturnTransition = ChangeBounds().apply {
+            duration = 750
+        }
 
         binding.apply {
             ibBack.setOnClickListener {

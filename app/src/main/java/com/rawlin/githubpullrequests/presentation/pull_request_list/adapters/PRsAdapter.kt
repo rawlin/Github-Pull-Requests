@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.Glide
@@ -46,7 +47,7 @@ class PRsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 .into(imageView)
 
             binding.root.setOnClickListener {
-                onItemClickListener?.invoke(item)
+                onItemClickListener?.invoke(item, imageView)
             }
 
         }
@@ -75,9 +76,9 @@ class PRsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return differ.currentList.size
     }
 
-    private var onItemClickListener: ((PullRequest) -> Unit)? = null
+    private var onItemClickListener: ((PullRequest, AppCompatImageView) -> Unit)? = null
 
-    fun setOnItemClickListener(listener: (PullRequest) -> Unit) {
+    fun setOnItemClickListener(listener: (PullRequest, AppCompatImageView) -> Unit) {
         onItemClickListener = listener
     }
 

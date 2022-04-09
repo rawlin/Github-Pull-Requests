@@ -1,8 +1,10 @@
 package com.rawlin.githubpullrequests.domain.di
 
+import com.rawlin.githubpullrequests.data.PullRepositoryImpl
 import com.rawlin.githubpullrequests.data.network.BasicAuthInterceptor
 import com.rawlin.githubpullrequests.data.network.GithubAPI
 import com.rawlin.githubpullrequests.domain.Constants.BASE_URL
+import com.rawlin.githubpullrequests.domain.PullRepository
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -34,4 +36,8 @@ object AppModule {
     @Singleton
     @Provides
     fun getGithubService(retrofit: Retrofit): GithubAPI = retrofit.create(GithubAPI::class.java)
+
+    @Singleton
+    @Provides
+    fun providePullRequestRepository(githubAPI: GithubAPI): PullRepository = PullRepositoryImpl(githubAPI)
 }

@@ -8,16 +8,19 @@ import androidx.constraintlayout.motion.utils.ViewState
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.rawlin.githubpullrequests.R
 import com.rawlin.githubpullrequests.databinding.FragmentPullRequestListBinding
 import com.rawlin.githubpullrequests.domain.BindingFragment
 import com.rawlin.githubpullrequests.domain.Resource
+import com.rawlin.githubpullrequests.domain.isNetworkAvailable
 import com.rawlin.githubpullrequests.domain.navigateSafely
 import com.rawlin.githubpullrequests.presentation.pull_request_list.adapters.PRsAdapter
 import com.rawlin.githubpullrequests.presentation.viewmodel.PullRequestViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import retrofit2.HttpException
 
 @AndroidEntryPoint
 class PullRequestListFragment : BindingFragment<FragmentPullRequestListBinding>() {
@@ -36,20 +39,39 @@ class PullRequestListFragment : BindingFragment<FragmentPullRequestListBinding>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.forceRefresh()
         setupRecyclerView()
         setupObservers()
         setupListeners()
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.forceRefresh()
+    }
+
     private fun setupListeners() {
-        adapter.setOnItemClickListener { pr ->
+        adapter.setOnItemClickListener { pr, iv ->
+            val extras = FragmentNavigatorExtras(iv to "two")
             val directions =
                 PullRequestListFragmentDirections.actionPullRequestListFragmentToPullRequestDetailFragment(
-                    pullRequest = pr
+                    pullRequest = pr,
                 )
-            findNavController().navigateSafely(directions)
+            findNavController().navigateSafely(directions, extras)
+        }
+
+        binding.apply {
+            noInternetView.retryButton.setOnClickListener {
+                viewModel.fireNetworkCall()
+                noInternetView.root.isVisible = false
+                toggleLoading(true)
+            }
+
+            errorView.retryButton.setOnClickListener {
+                viewModel.fireNetworkCall()
+                errorView.root.isVisible = false
+                toggleLoading(true)
+            }
         }
     }
 
@@ -58,6 +80,11 @@ class PullRequestListFragment : BindingFragment<FragmentPullRequestListBinding>(
             when (prs.peekContent()) {
                 is Resource.Error -> {
                     toggleLoading(false)
+                    if (isNetworkAvailable(requireContext())) {
+                        toggleErrorView(true)
+                    } else {
+                        toggleNoInternetView(true)
+                    }
                 }
                 is Resource.Loading -> {
                     toggleLoading(true)
@@ -68,6 +95,14 @@ class PullRequestListFragment : BindingFragment<FragmentPullRequestListBinding>(
                 }
             }
         }
+    }
+
+    private fun toggleErrorView(toggle: Boolean) {
+        binding.errorView.root.isVisible = toggle
+    }
+
+    private fun toggleNoInternetView(toggle: Boolean) {
+        binding.noInternetView.root.isVisible = toggle
     }
 
     private fun toggleLoading(toggle: Boolean) {

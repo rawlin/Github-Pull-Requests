@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PullRequestViewModel @Inject constructor(
-    private val repository: PullRepositoryImpl
+    private val repository: PullRepository
 ): ViewModel() {
 
     private val _allPullRequests = MutableLiveData<Event<Resource<AllPullRequests>>>()
