@@ -2,5 +2,6 @@
     <string name="app_name">Github Pull Requests</string>
     <string name="create_at">Created at %s</string>
     <string name="closed_at">Closed at %s</string>
+    <string name="by_">by %s</string>
 
 </resources>
