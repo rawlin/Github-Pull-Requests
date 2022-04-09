@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/pullRequestListFragment">
+
+    <fragment
+        android:id="@+id/pullRequestListFragment"
+        android:name="com.rawlin.githubpullrequests.presentation.pull_request_list.PullRequestListFragment"
+        android:label="fragment_pull_request_list"
+        tools:layout="@layout/fragment_pull_request_list" >
+        <action
+            android:id="@+id/action_pullRequestListFragment_to_pullRequestDetailFragment"
+            app:destination="@id/pullRequestDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pullRequestDetailFragment"
+        android:name="com.rawlin.githubpullrequests.PullRequestDetailFragment"
+        android:label="fragment_pull_request_detail"
+        tools:layout="@layout/fragment_pull_request_detail" />
+</navigation>

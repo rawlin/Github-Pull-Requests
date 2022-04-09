@@ -2,6 +2,8 @@ package com.rawlin.githubpullrequests.domain.di
 
 import com.rawlin.githubpullrequests.data.network.GithubAPI
 import com.rawlin.githubpullrequests.domain.Constants.BASE_URL
+import com.rawlin.githubpullrequests.domain.moshi_annotations.DateTimeAdapter
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,12 +19,18 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit() = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(MoshiConverterFactory.create())
+    fun provideMoshi(): Moshi = Moshi.Builder()
+        .add(DateTimeAdapter())
         .build()
 
     @Singleton
     @Provides
-    fun getGithubService(retrofit: Retrofit) = retrofit.create(GithubAPI::class.java)
+    fun provideRetrofit(moshi: Moshi): Retrofit = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .build()
+
+    @Singleton
+    @Provides
+    fun getGithubService(retrofit: Retrofit): GithubAPI = retrofit.create(GithubAPI::class.java)
 }

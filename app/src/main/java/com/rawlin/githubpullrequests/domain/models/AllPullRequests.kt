@@ -8,7 +8,8 @@ import com.squareup.moshi.JsonClass
 data class AllPullRequests(
     @Json(name = "incomplete_results")
     val incompleteResults: Boolean,
-    val items: List<Item>,
+    @Json(name = "items")
+    val pullRequests: List<PullRequest>,
     @Json(name = "total_count")
     val totalCount: Int
 )
