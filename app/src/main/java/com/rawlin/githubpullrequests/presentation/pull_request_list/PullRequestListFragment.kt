@@ -52,7 +52,7 @@ class PullRequestListFragment : BindingFragment<FragmentPullRequestListBinding>(
 
     private fun setupListeners() {
         adapter.setOnItemClickListener { pr, iv ->
-            val extras = FragmentNavigatorExtras(iv to "two")
+            val extras = FragmentNavigatorExtras(iv to getString(R.string.transition_image))
             val directions =
                 PullRequestListFragmentDirections.actionPullRequestListFragmentToPullRequestDetailFragment(
                     pullRequest = pr,
@@ -63,13 +63,13 @@ class PullRequestListFragment : BindingFragment<FragmentPullRequestListBinding>(
         binding.apply {
             noInternetView.retryButton.setOnClickListener {
                 viewModel.fireNetworkCall()
-                noInternetView.root.isVisible = false
+                toggleNoInternetView(false)
                 toggleLoading(true)
             }
 
             errorView.retryButton.setOnClickListener {
                 viewModel.fireNetworkCall()
-                errorView.root.isVisible = false
+                toggleErrorView(false)
                 toggleLoading(true)
             }
         }

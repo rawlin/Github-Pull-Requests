@@ -43,10 +43,12 @@ class PRsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
             Glide.with(itemView)
                 .load(item.user.avatarUrl)
+                .circleCrop()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(imageView)
 
             binding.root.setOnClickListener {
+                imageView.transitionName = itemView.context.getString(R.string.transition_image)
                 onItemClickListener?.invoke(item, imageView)
             }
 
