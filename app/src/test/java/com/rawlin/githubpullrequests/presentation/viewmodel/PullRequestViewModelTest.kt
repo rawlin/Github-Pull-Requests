@@ -5,6 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import com.rawlin.githubpullrequests.MainCoroutineRule
 import com.rawlin.githubpullrequests.data.FakeDataSource.dummyData
 import com.rawlin.githubpullrequests.data.FakePullRepository
+import com.rawlin.githubpullrequests.data.TestConditions
 import com.rawlin.githubpullrequests.domain.Event
 import com.rawlin.githubpullrequests.domain.Resource
 import com.rawlin.githubpullrequests.getOrAwaitValueTest
@@ -30,11 +31,37 @@ class PullRequestViewModelTest {
     }
 
     @Test
-    fun `get all pull request from repo`() {
+    fun `get all pull requests from repo`() {
         viewModel.fireNetworkCall()
 
         val value = viewModel.allPullRequests.getOrAwaitValueTest()
 
-        assertThat(value).isEqualTo(Event(Resource.Success(dummyData)))
+        print(value)
+        assertThat(value).isNotNull()
     }
+
+    @Test
+    fun `throw error when list is empty`() {
+        repo.testConditions = TestConditions.EMPTY_LIST
+        viewModel.fireNetworkCall()
+
+        val value = viewModel.allPullRequests.getOrAwaitValueTest().peekContent()
+
+        print(value)
+
+        assertThat(value).isInstanceOf(Resource.Error::class.java)
+    }
+
+    @Test
+    fun `throw error when request is bad`() {
+        repo.testConditions = TestConditions.BAD_REQUEST
+        viewModel.fireNetworkCall()
+
+        val value = viewModel.allPullRequests.getOrAwaitValueTest().peekContent()
+
+        print(value)
+
+        assertThat(value).isInstanceOf(Resource.Error::class.java)
+    }
+
 }
